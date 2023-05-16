@@ -12,8 +12,8 @@ public class SurveyApp {
     private final ParticipationRepository participationRepository;
 
     public SurveyApp() {
-        surveyRepository = new SurveyRepository();
         memberRepository = new MemberRepository();
+        surveyRepository = new SurveyRepository();
         participationRepository = new ParticipationRepository();
         surveyService = new SurveyService(surveyRepository, memberRepository, participationRepository);
     }

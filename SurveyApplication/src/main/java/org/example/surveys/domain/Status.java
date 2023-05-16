@@ -1,16 +1,18 @@
 package org.example.surveys.domain;
 
 public enum Status {
-    NOT_ASKED(1, "Not asked"),
-    REJECTED(2, "Rejected"),
-    FILTERED(3, "Filtered"),
-    COMPLETED(4, "Completed");
+    NOT_ASKED(1),
+    REJECTED(2),
+    FILTERED(3),
+    COMPLETED(4);
 
     private final int key;
-    private final String value;
 
-    private Status(int key, String value) {
+    private Status(int key) {
         this.key = key;
-        this.value = value;
+    }
+
+    public int getKey() {
+        return key;
     }
 }

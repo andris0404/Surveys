@@ -15,6 +15,7 @@ public class SurveyRepository {
     private static final int EXPECTED_COMPLETES = 2;
     private static final int COMPLETED_POINTS = 3;
     private static final int FILTERED_POINTS = 4;
+    private static final String PATH = "src/main/resources/OO - 2 - Surveys.csv";
     private final Map<Long, Survey> surveys;
 
     public SurveyRepository() {
@@ -27,7 +28,7 @@ public class SurveyRepository {
     }
 
     private void readSurveysFromCSV() {
-        try (CSVReader csvReader = new CSVReader(new FileReader("OO - 2 - Surveys.csv"))) {
+        try (CSVReader csvReader = new CSVReader(new FileReader(PATH))) {
             csvReader.readNext(); // skipping first line
             String[] line;
             while ((line = csvReader.readNext()) != null) {
@@ -38,7 +39,7 @@ public class SurveyRepository {
         }
     }
 
-    private void createSurvey(String[] line) {
+    private void createSurvey(final String[] line) {
         Survey survey = new Survey();
         survey.setId(Long.parseLong(line[ID]));
         survey.setName(line[NAME]);

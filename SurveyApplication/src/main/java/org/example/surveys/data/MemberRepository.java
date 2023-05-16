@@ -14,6 +14,7 @@ public class MemberRepository {
     private static final int NAME = 1;
     private static final int EMAIL = 2;
     private static final int IS_ACTIVE = 3;
+    private static final String PATH = "src/main/resources/OO - 2 - Members.csv";
     private final Map<Long, Member> members;
 
     public MemberRepository() {
@@ -26,7 +27,7 @@ public class MemberRepository {
     }
 
     private void readMembersFromCSV() {
-        try (CSVReader csvReader = new CSVReader(new FileReader("OO - 2 - Members.csv"))) {
+        try (CSVReader csvReader = new CSVReader(new FileReader(PATH))) {
             csvReader.readNext(); // skipping first line
             String[] line;
             while ((line = csvReader.readNext()) != null) {
@@ -37,7 +38,7 @@ public class MemberRepository {
         }
     }
 
-    private void createMember(String[] line) {
+    private void createMember(final String[] line) {
         Member member = new Member();
         member.setId(Long.parseLong(line[ID]));
         member.setName(line[NAME]);
