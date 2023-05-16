@@ -1,6 +1,7 @@
 package org.example.surveys;
 
 import org.example.surveys.data.DataStore;
+import org.example.surveys.service.SurveyService;
 
 public class SurveyApp {
     private final SurveyService surveyService;

@@ -1,4 +1,4 @@
-package org.example.surveys;
+package org.example.surveys.service;
 
 import org.example.surveys.data.DataStore;
 import org.example.surveys.domain.Member;
