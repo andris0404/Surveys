@@ -7,7 +7,7 @@ public class Point {
     public Long getSurveyId() {
         return surveyId;
     }
-    
+
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
     }
@@ -18,5 +18,13 @@ public class Point {
 
     public void setNumOfPoints(int numOfPoints) {
         this.numOfPoints = numOfPoints;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "surveyId=" + surveyId +
+                ", numOfPoints=" + numOfPoints +
+                '}';
     }
 }

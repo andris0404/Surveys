@@ -37,4 +37,14 @@ public class Member {
     public void setActive(boolean active) {
         isActive = active;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
