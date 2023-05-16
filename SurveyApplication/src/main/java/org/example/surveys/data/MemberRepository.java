@@ -43,7 +43,7 @@ public class MemberRepository {
         member.setId(Long.parseLong(line[ID]));
         member.setName(line[NAME]);
         member.setEmail(line[EMAIL]);
-        member.setActive(line[IS_ACTIVE].equals("1") ? true : false);
+        member.setActive("1".equals(line[IS_ACTIVE]) ? true : false);
         members.put(member.getId(), member);
     }
 }
