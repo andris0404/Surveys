@@ -55,18 +55,18 @@ public class ParticipationRepository {
     }
 
     private Map<Integer, Status> readStatusesFromCSV() {
-        Map<Integer, Status> result = new HashMap<>();
+        Map<Integer, Status> results = new HashMap<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(STATUSES_PATH))) {
             csvReader.readNext(); // skipping first line
             String[] line;
             while ((line = csvReader.readNext()) != null) {
                 if (line[NAME].contains(" ")) {
-                    result.put(Integer.parseInt(line[STATUS_ID]), Status.valueOf(line[NAME].toUpperCase().replace(" ", "_")));
+                    results.put(Integer.parseInt(line[STATUS_ID]), Status.valueOf(line[NAME].toUpperCase().replace(" ", "_")));
                 } else {
-                    result.put(Integer.parseInt(line[STATUS_ID]), Status.valueOf(line[NAME].toUpperCase()));
+                    results.put(Integer.parseInt(line[STATUS_ID]), Status.valueOf(line[NAME].toUpperCase()));
                 }
             }
-            return result;
+            return results;
         } catch (CsvValidationException | IOException e) {
             throw new RuntimeException(e);
         }
