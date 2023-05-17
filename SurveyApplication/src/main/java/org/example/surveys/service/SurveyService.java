@@ -54,8 +54,7 @@ public class SurveyService {
     public List<Point> getSurveyPointsByMemberId(final Long memberId) {
         List<Point> results = new ArrayList<>();
         participationRepository.getParticipants().stream()
-                .filter(participation -> participation.getMemberId().equals(memberId)
-                        && (Status.COMPLETED.equals(participation.getStatus()) || Status.FILTERED.equals(participation.getStatus())))
+                .filter(participation -> participation.getMemberId().equals(memberId) && isEligibleForPoint(participation.getStatus()))
                 .forEach(participation -> {
                     Survey survey = surveyRepository.getSurveys().get(participation.getSurveyId());
                     Point point = new Point();
@@ -64,5 +63,9 @@ public class SurveyService {
                     results.add(point);
                 });
         return results;
+    }
+
+    private boolean isEligibleForPoint(final Status status) {
+        return Status.COMPLETED.equals(status) || Status.FILTERED.equals(status);
     }
 }
