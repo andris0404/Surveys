@@ -78,29 +78,34 @@ public class SurveyService {
         Map<Long, List<Participation>> participantMap = participationRepository.getParticipants().stream()
                 .collect(Collectors.groupingBy(Participation::getSurveyId));
         participantMap.forEach((surveyId, participationList) -> {
-            Statistics statistics = new Statistics();
-            statistics.setSurveyId(surveyId);
-            statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
-            int completed = 0;
-            int filtered = 0;
-            int rejected = 0;
-            double totalLength = 0;
-            for (Participation participation : participationList) {
-                totalLength += participation.getLength();
-                if (Status.COMPLETED.equals(participation.getStatus())) {
-                    completed++;
-                } else if (Status.FILTERED.equals(participation.getStatus())) {
-                    filtered++;
-                } else if (Status.REJECTED.equals(participation.getStatus())) {
-                    rejected++;
-                }
-            }
-            statistics.setNumOfCompletes(completed);
-            statistics.setNumOfFiltered(filtered);
-            statistics.setNumOfRejected(rejected);
-            statistics.setAvgLength(totalLength / participationList.size());
+            Statistics statistics = createStatisticsForSurvey(surveyId, participationList);
             results.add(statistics);
         });
         return results;
+    }
+
+    private Statistics createStatisticsForSurvey(Long surveyId, List<Participation> participationList) {
+        Statistics statistics = new Statistics();
+        statistics.setSurveyId(surveyId);
+        statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
+        int completed = 0;
+        int filtered = 0;
+        int rejected = 0;
+        double totalLength = 0;
+        for (Participation participation : participationList) {
+            totalLength += participation.getLength();
+            if (Status.COMPLETED.equals(participation.getStatus())) {
+                completed++;
+            } else if (Status.FILTERED.equals(participation.getStatus())) {
+                filtered++;
+            } else if (Status.REJECTED.equals(participation.getStatus())) {
+                rejected++;
+            }
+        }
+        statistics.setNumOfCompletes(completed);
+        statistics.setNumOfFiltered(filtered);
+        statistics.setNumOfRejected(rejected);
+        statistics.setAvgLength(totalLength / participationList.size());
+        return statistics;
     }
 }

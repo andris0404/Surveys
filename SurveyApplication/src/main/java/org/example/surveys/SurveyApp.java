@@ -13,14 +13,11 @@ import java.util.List;
 
 public class SurveyApp {
     private final SurveyService surveyService;
-    private final SurveyRepository surveyRepository;
-    private final MemberRepository memberRepository;
-    private final ParticipationRepository participationRepository;
 
     public SurveyApp() {
-        memberRepository = new MemberRepository();
-        surveyRepository = new SurveyRepository();
-        participationRepository = new ParticipationRepository();
+        MemberRepository memberRepository = new MemberRepository();
+        SurveyRepository surveyRepository = new SurveyRepository();
+        ParticipationRepository participationRepository = new ParticipationRepository();
         surveyService = new SurveyService(surveyRepository, memberRepository, participationRepository);
     }
 
