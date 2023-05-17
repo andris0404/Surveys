@@ -4,12 +4,16 @@ import org.example.surveys.data.MemberRepository;
 import org.example.surveys.data.ParticipationRepository;
 import org.example.surveys.data.SurveyRepository;
 import org.example.surveys.domain.Member;
+import org.example.surveys.domain.Participation;
 import org.example.surveys.domain.Point;
+import org.example.surveys.domain.Statistics;
 import org.example.surveys.domain.Status;
 import org.example.surveys.domain.Survey;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SurveyService {
     private final SurveyRepository surveyRepository;
@@ -67,5 +71,36 @@ public class SurveyService {
 
     private boolean isEligibleForPoint(final Status status) {
         return Status.COMPLETED.equals(status) || Status.FILTERED.equals(status);
+    }
+
+    public List<Statistics> getSurveyStatistics() {
+        List<Statistics> results = new ArrayList<>();
+        Map<Long, List<Participation>> participantMap = participationRepository.getParticipants().stream()
+                .collect(Collectors.groupingBy(Participation::getSurveyId));
+        participantMap.forEach((surveyId, participationList) -> {
+            Statistics statistics = new Statistics();
+            statistics.setSurveyId(surveyId);
+            statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
+            int completed = 0;
+            int filtered = 0;
+            int rejected = 0;
+            double totalLength = 0;
+            for (Participation participation : participationList) {
+                totalLength += participation.getLength();
+                if (Status.COMPLETED.equals(participation.getStatus())) {
+                    completed++;
+                } else if (Status.FILTERED.equals(participation.getStatus())) {
+                    filtered++;
+                } else if (Status.REJECTED.equals(participation.getStatus())) {
+                    rejected++;
+                }
+            }
+            statistics.setNumOfCompletes(completed);
+            statistics.setNumOfFiltered(filtered);
+            statistics.setNumOfRejected(rejected);
+            statistics.setAvgLength(totalLength / participationList.size());
+            results.add(statistics);
+        });
+        return results;
     }
 }
