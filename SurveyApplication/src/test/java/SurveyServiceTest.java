@@ -3,6 +3,7 @@ import org.example.surveys.data.ParticipationRepository;
 import org.example.surveys.data.SurveyRepository;
 import org.example.surveys.domain.Member;
 import org.example.surveys.domain.Participation;
+import org.example.surveys.domain.Point;
 import org.example.surveys.domain.Status;
 import org.example.surveys.domain.Survey;
 import org.example.surveys.service.SurveyService;
@@ -124,6 +125,35 @@ class SurveyServiceTest {
         assertTrue(actual.isEmpty());
     }
 
+    @Test
+    void getSurveyPointsByMemberId_validIdGiven_returnsPointList() {
+        // Given
+        List<Participation> participants = createTestParticipationList();
+        Map<Long, Survey> surveys = createTestSurveyList();
+        Point point1 = createTestPoint(1L, 2);
+        Point point2 = createTestPoint(2L, 15);
+        Point point3 = createTestPoint(3L, 10);
+        List<Point> expected = List.of(point1, point2, point3);
+        when(participationRepository.getParticipants()).thenReturn(participants);
+        when(surveyRepository.getSurveys()).thenReturn(surveys);
+        // When
+        List<Point> actual = underTest.getSurveyPointsByMemberId(2L);
+        // Then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getSurveyPointsByMemberId_invalidIdGiven_returnsEmptyList() {
+        // Given
+        List<Participation> participants = createTestParticipationList();
+        when(participationRepository.getParticipants()).thenReturn(participants);
+        // When
+        List<Point> actual = underTest.getSurveyPointsByMemberId(NONEXISTENT_ID);
+        // Then
+        assertNotNull(actual);
+        assertTrue(actual.isEmpty());
+    }
+
     private Map<Long, Member> createTestMemberList() {
         Member member1 = createTestMember(1L, true);
         Member member2 = createTestMember(2L, true);
@@ -182,6 +212,13 @@ class SurveyServiceTest {
         testParticipationList.add(createTestParticipation(5L, 4L, Status.COMPLETED, 30));
         testParticipationList.add(createTestParticipation(5L, 5L, Status.COMPLETED, 17));
         return testParticipationList;
+    }
+
+    private Point createTestPoint(Long surveyId, int numOfPoints) {
+        Point point = new Point();
+        point.setSurveyId(surveyId);
+        point.setNumOfPoints(numOfPoints);
+        return point;
     }
 
     private Member createTestMember(Long id, boolean isActive) {
