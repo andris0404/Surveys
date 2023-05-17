@@ -4,6 +4,7 @@ import org.example.surveys.data.SurveyRepository;
 import org.example.surveys.domain.Member;
 import org.example.surveys.domain.Participation;
 import org.example.surveys.domain.Point;
+import org.example.surveys.domain.Statistics;
 import org.example.surveys.domain.Status;
 import org.example.surveys.domain.Survey;
 import org.example.surveys.service.SurveyService;
@@ -40,13 +41,13 @@ class SurveyServiceTest {
         // Given
         List<Participation> participants = createTestParticipationList();
         Map<Long, Member> members = createTestMemberList();
-        int expectedMembers = 2;
+        List<Member> expected = List.of(createTestMember(1L, true), createTestMember(4L, false));
         when(participationRepository.getParticipants()).thenReturn(participants);
         when(memberRepository.getMembers()).thenReturn(members);
         // When
         List<Member> actual = underTest.getMembersBySurveyId(1L);
         // Then
-        assertEquals(expectedMembers, actual.size());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -66,13 +67,16 @@ class SurveyServiceTest {
         // Given
         List<Participation> participants = createTestParticipationList();
         Map<Long, Survey> surveys = createTestSurveyList();
-        int expectedSurveys = 3;
+        List<Survey> expected = new ArrayList<>();
+        expected.add(createTestSurvey(2L, "testSurvey2", 70, 15, 4));
+        expected.add(createTestSurvey(4L, "testSurvey4", 20, 10, 1));
+        expected.add(createTestSurvey(5L, "testSurvey5", 20, 35, 4));
         when(participationRepository.getParticipants()).thenReturn(participants);
         when(surveyRepository.getSurveys()).thenReturn(surveys);
         // When
         List<Survey> actual = underTest.getCompletedSurveysByMemberId(3L);
         // Then
-        assertEquals(expectedSurveys, actual.size());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -94,15 +98,15 @@ class SurveyServiceTest {
         Map<Long, Member> members = createTestMemberList();
         when(participationRepository.getParticipants()).thenReturn(participants);
         when(memberRepository.getMembers()).thenReturn(members);
-        int expectedMembers = 1;
+        List<Member> expected = List.of(createTestMember(2L, true));
         // When
         List<Member> actual = underTest.getNotInvitedActiveMembers(4L);
         // Then
-        assertEquals(expectedMembers, actual.size());
+        assertEquals(expected, actual);
     }
 
     @Test
-    void getNotInvitedActiveMembersBySurveyId_validIdGiven_noOneCanBeInvited() {
+    void getNotInvitedActiveMembersBySurveyId_validIdGiven_nobodyCanBeInvited() {
         // Given
         List<Participation> participants = createTestParticipationList();
         when(participationRepository.getParticipants()).thenReturn(participants);
@@ -154,6 +158,19 @@ class SurveyServiceTest {
         assertTrue(actual.isEmpty());
     }
 
+    @Test
+    void getSurveyStatistics_returnsSameAmountOfStatisticsAsSurveys() {
+        // Given
+        List<Participation> participants = createTestParticipationList();
+        Map<Long, Survey> surveys = createTestSurveyList();
+        when(participationRepository.getParticipants()).thenReturn(participants);
+        when(surveyRepository.getSurveys()).thenReturn(surveys);
+        // When
+        List<Statistics> actual = underTest.getSurveyStatistics();
+        // Then
+        assertEquals(surveys.size(), actual.size());
+    }
+
     private Map<Long, Member> createTestMemberList() {
         Member member1 = createTestMember(1L, true);
         Member member2 = createTestMember(2L, true);
@@ -170,11 +187,11 @@ class SurveyServiceTest {
     }
 
     private Map<Long, Survey> createTestSurveyList() {
-        Survey survey1 = createTestSurvey(1L, "test1", 30, 5, 2);
-        Survey survey2 = createTestSurvey(2L, "test2", 70, 15, 4);
-        Survey survey3 = createTestSurvey(3L, "test3", 100, 10, 2);
-        Survey survey4 = createTestSurvey(4L, "test4", 20, 10, 1);
-        Survey survey5 = createTestSurvey(5L, "test5", 20, 35, 4);
+        Survey survey1 = createTestSurvey(1L, "testSurvey1", 30, 5, 2);
+        Survey survey2 = createTestSurvey(2L, "testSurvey2", 70, 15, 4);
+        Survey survey3 = createTestSurvey(3L, "testSurvey3", 100, 10, 2);
+        Survey survey4 = createTestSurvey(4L, "testSurvey4", 20, 10, 1);
+        Survey survey5 = createTestSurvey(5L, "testSurvey5", 20, 35, 4);
         Map<Long, Survey> surveys = new HashMap<>();
         surveys.put(survey1.getId(), survey1);
         surveys.put(survey2.getId(), survey2);
