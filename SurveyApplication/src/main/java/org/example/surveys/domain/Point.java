@@ -27,12 +27,12 @@ public class Point {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-        return getNumOfPoints() == point.getNumOfPoints() && Objects.equals(getSurveyId(), point.getSurveyId());
+        return numOfPoints == point.numOfPoints && Objects.equals(surveyId, point.surveyId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSurveyId(), getNumOfPoints());
+        return Objects.hash(surveyId, numOfPoints);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.example.surveys.domain;
 
+import java.util.Objects;
+
 public class Survey {
     private Long id;
     private String name;
@@ -45,6 +47,23 @@ public class Survey {
 
     public void setFilteredPoints(int filteredPoints) {
         this.filteredPoints = filteredPoints;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Survey survey = (Survey) o;
+        return expectedCompletes == survey.expectedCompletes
+                && completionPoints == survey.completionPoints
+                && filteredPoints == survey.filteredPoints
+                && Objects.equals(id, survey.id)
+                && Objects.equals(name, survey.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, expectedCompletes, completionPoints, filteredPoints);
     }
 
     @Override

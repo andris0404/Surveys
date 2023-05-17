@@ -1,5 +1,7 @@
 package org.example.surveys.domain;
 
+import java.util.Objects;
+
 public class Member {
     private Long id;
     private String name;
@@ -36,6 +38,22 @@ public class Member {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return isActive == member.isActive
+                && Objects.equals(id, member.id)
+                && Objects.equals(name, member.name)
+                && Objects.equals(email, member.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, isActive);
     }
 
     @Override
