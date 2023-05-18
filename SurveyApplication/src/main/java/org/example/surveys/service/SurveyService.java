@@ -91,7 +91,7 @@ public class SurveyService {
         int completed = 0;
         int filtered = 0;
         int rejected = 0;
-        double totalLength = 0;
+        float totalLength = 0;
         for (Participation participation : participationList) {
             totalLength += participation.getLength();
             if (Status.COMPLETED.equals(participation.getStatus())) {
@@ -105,7 +105,7 @@ public class SurveyService {
         statistics.setNumOfCompletes(completed);
         statistics.setNumOfFiltered(filtered);
         statistics.setNumOfRejected(rejected);
-        statistics.setAvgLength(totalLength / participationList.size());
+        statistics.setAvgLength(Math.round(totalLength / participationList.size()));
         return statistics;
     }
 }

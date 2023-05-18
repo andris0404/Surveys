@@ -6,7 +6,7 @@ public class Statistics {
     private int numOfCompletes;
     private int numOfFiltered;
     private int numOfRejected;
-    private double avgLength;
+    private int avgLength;
 
     public Long getSurveyId() {
         return surveyId;
@@ -48,11 +48,11 @@ public class Statistics {
         this.numOfRejected = numOfRejected;
     }
 
-    public double getAvgLength() {
+    public int getAvgLength() {
         return avgLength;
     }
 
-    public void setAvgLength(double avgLength) {
+    public void setAvgLength(int avgLength) {
         this.avgLength = avgLength;
     }
 
