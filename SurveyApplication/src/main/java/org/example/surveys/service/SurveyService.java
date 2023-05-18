@@ -84,7 +84,7 @@ public class SurveyService {
         return results;
     }
 
-    private Statistics createStatisticsForSurvey(Long surveyId, List<Participation> participationList) {
+    private Statistics createStatisticsForSurvey(final Long surveyId, final List<Participation> participationList) {
         Statistics statistics = new Statistics();
         statistics.setSurveyId(surveyId);
         statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
