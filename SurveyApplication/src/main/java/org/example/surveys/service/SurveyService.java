@@ -27,46 +27,39 @@ public class SurveyService {
     }
 
     public List<Member> getMembersBySurveyId(final Long surveyId) {
-        List<Member> results = new ArrayList<>();
-        participationRepository.getParticipants().stream().
+        return participationRepository.getParticipants().stream().
                 filter(participation -> participation.getSurveyId().equals(surveyId) && participation.getStatus().equals(Status.COMPLETED))
-                .forEach(participation -> results.add(memberRepository.getMembers().get(participation.getMemberId())));
-        return results;
+                .map(participation -> memberRepository.getMembers().get(participation.getMemberId()))
+                .toList();
     }
 
     public List<Survey> getCompletedSurveysByMemberId(final Long memberId) {
-        List<Survey> results = new ArrayList<>();
-        participationRepository.getParticipants().stream()
+        return participationRepository.getParticipants().stream()
                 .filter(participation -> participation.getMemberId().equals(memberId) && participation.getStatus().equals(Status.COMPLETED))
-                .forEach(participation -> results.add(surveyRepository.getSurveys().get(participation.getSurveyId())));
-        return results;
+                .map(participation -> surveyRepository.getSurveys().get(participation.getSurveyId()))
+                .toList();
     }
 
     public List<Member> getNotInvitedActiveMembers(final Long surveyId) {
-        List<Member> results = new ArrayList<>();
-        participationRepository.getParticipants().stream()
+        return participationRepository.getParticipants().stream()
                 .filter(participation -> participation.getSurveyId().equals(surveyId) && participation.getStatus().equals(Status.NOT_ASKED))
-                .forEach(participation -> {
-                    Member member = memberRepository.getMembers().get(participation.getMemberId());
-                    if (member.isActive()) {
-                        results.add(member);
-                    }
-                });
-        return results;
+                .map(participation -> memberRepository.getMembers().get(participation.getMemberId()))
+                .filter(Member::isActive)
+                .toList();
+
     }
 
     public List<Point> getSurveyPointsByMemberId(final Long memberId) {
-        List<Point> results = new ArrayList<>();
-        participationRepository.getParticipants().stream()
+        return participationRepository.getParticipants().stream()
                 .filter(participation -> participation.getMemberId().equals(memberId) && isEligibleForPoint(participation.getStatus()))
-                .forEach(participation -> {
+                .map(participation -> {
                     Survey survey = surveyRepository.getSurveys().get(participation.getSurveyId());
                     Point point = new Point();
                     point.setSurveyId(survey.getId());
                     point.setNumOfPoints(participation.getStatus().equals(Status.COMPLETED) ? survey.getCompletionPoints() : survey.getFilteredPoints());
-                    results.add(point);
-                });
-        return results;
+                    return point;
+                })
+                .toList();
     }
 
     private boolean isEligibleForPoint(final Status status) {
@@ -85,9 +78,6 @@ public class SurveyService {
     }
 
     private Statistics createStatisticsForSurvey(final Long surveyId, final List<Participation> participationList) {
-        Statistics statistics = new Statistics();
-        statistics.setSurveyId(surveyId);
-        statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
         int completed = 0;
         int filtered = 0;
         int rejected = 0;
@@ -102,6 +92,9 @@ public class SurveyService {
                 rejected++;
             }
         }
+        Statistics statistics = new Statistics();
+        statistics.setSurveyId(surveyId);
+        statistics.setSurveyName(surveyRepository.getSurveys().get(surveyId).getName());
         statistics.setNumOfCompletes(completed);
         statistics.setNumOfFiltered(filtered);
         statistics.setNumOfRejected(rejected);
